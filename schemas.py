@@ -42,6 +42,13 @@ class UserCreate(BaseModel):
     role: str = Field(..., pattern="^(customer|store)$")
 
 
+
+# ===== 顧客ログイン用 =====
+class CustomerLogin(BaseModel):
+    """お客様ログイン時のリクエスト"""
+    username: str
+    password: str
+
 class UserLogin(BaseModel):
     """ログイン時のリクエスト"""
     username: str
@@ -156,6 +163,32 @@ class OrderResponse(BaseModel):
 class OrderListResponse(BaseModel):
     """注文一覧のレスポンス"""
     orders: List[OrderResponse]
+    total: int
+
+
+class OrderHistoryItem(BaseModel):
+    """注文履歴項目（フロントエンド用の最適化されたデータ構造）"""
+    id: int
+    quantity: int
+    total_price: int
+    status: str
+    delivery_time: Optional[time]
+    notes: Optional[str]
+    ordered_at: datetime
+    
+    # メニュー情報（注文履歴に必要な項目のみ）
+    menu_id: int
+    menu_name: str
+    menu_price: int
+    menu_image_url: Optional[str]
+
+    class Config:
+        from_attributes = True
+
+
+class OrderHistoryResponse(BaseModel):
+    """注文履歴のレスポンス"""
+    orders: List[OrderHistoryItem]
     total: int
 
 
